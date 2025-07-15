@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('stok')->default(0);
             $table->timestamps();
 
-            $table->primary(['produk_id', 'lokasi_id']); // Composite primary key
+            $table->unique(['produk_id', 'lokasi_id']);
         });
     }
 

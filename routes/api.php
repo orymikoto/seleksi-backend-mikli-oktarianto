@@ -8,6 +8,8 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     // User routes

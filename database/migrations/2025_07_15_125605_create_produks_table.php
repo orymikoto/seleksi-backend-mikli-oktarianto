@@ -15,10 +15,10 @@ return new class extends Migration
         Schema::create('produks', function (Blueprint $table) {
             $table->id();
             $table->string('kode_produk')->unique();
-            $table->foreignIdFor(Kategori::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Kategori::class)->nullable()->constrained()->onDelete('set null');
             $table->string('nama_produk');
             $table->decimal('harga', 12, 2);
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->string('satuan');
             $table->timestamps();
             $table->softDeletes();

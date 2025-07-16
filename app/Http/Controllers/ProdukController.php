@@ -5,31 +5,62 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Http\Requests\StoreProdukRequest;
 use App\Http\Requests\UpdateProdukRequest;
+use App\Http\Resources\ProdukResource;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
-    }
+        $produks = Produk::with(['kategori', 'lokasis'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        // The API Resource handles the JSON structure automatically
+        return ProdukResource::collection($produks)
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProdukRequest $request)
+    
+    public function store(StoreProdukRequest $request): JsonResponse
     {
-        //
+        try {
+            $data = $request->validated();
+            
+            // Handle image upload if present
+            if ($request->hasFile('gambar')) {
+                $data['gambar'] = $request->file('gambar')->store('produk-images', 'public');
+            }
+
+            $produk = Produk::create($data);
+
+            // Sync locations if provided
+            if ($request->has('lokasi_ids')) {
+                $produk->lokasis()->sync($request->lokasi_ids);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product created successfully',
+                'data' => $produk->load('kategori', 'lokasis')
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -38,29 +69,116 @@ class ProdukController extends Controller
     public function show(Produk $produk)
     {
         //
+        $produk->load(['kategori', 'lokasis']);
+
+        return (new ProdukResource($produk))->response();
+    }
+
+   /**
+     * Update the specified product
+     */
+    public function update(UpdateProdukRequest $request, Produk $produk): JsonResponse
+    {
+        try {
+            $data = $request->validated();
+            
+            // Handle image update
+            if ($request->hasFile('gambar')) {
+                // Delete old image if exists
+                if ($produk->gambar) {
+                    Storage::disk('public')->delete($produk->gambar);
+                }
+                $data['gambar'] = $request->file('gambar')->store('produk-images', 'public');
+            }
+
+            $produk->update($data);
+
+            // Sync locations if provided
+            if ($request->has('lokasi_ids')) {
+                $produk->lokasis()->sync($request->lokasi_ids);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product updated successfully',
+                'data' => $produk->fresh()->load('kategori', 'lokasis')
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Remove the specified product
      */
-    public function edit(Produk $produk)
+    public function destroy(Produk $produk): JsonResponse
     {
-        //
+        try {
+            // Delete associated image if exists
+            if ($produk->gambar) {
+                Storage::disk('public')->delete($produk->gambar);
+            }
+
+            $produk->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product deleted successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Search products by name or code
      */
-    public function update(UpdateProdukRequest $request, Produk $produk)
+    public function search(Request $request): JsonResponse
     {
-        //
+        $query = $request->input('query');
+        
+        $produks = Produk::where('nama_produk', 'like', "%$query%")
+            ->orWhere('kode_produk', 'like', "%$query%")
+            ->with('kategori')
+            ->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Search results',
+            'data' => $produks
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Get low stock products
      */
-    public function destroy(Produk $produk)
+    public function lowStock(Request $request): JsonResponse
     {
-        //
+        $threshold = $request->input('threshold', 10);
+        
+        $produks = Produk::whereHas('lokasis', function($query) use ($threshold) {
+                $query->where('stok', '<=', $threshold);
+            })
+            ->with(['lokasis' => function($query) use ($threshold) {
+                $query->wherePivot('stok', '<=', $threshold);
+            }])
+            ->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Low stock products',
+            'data' => $produks,
+            'threshold' => $threshold
+        ]);
     }
 }

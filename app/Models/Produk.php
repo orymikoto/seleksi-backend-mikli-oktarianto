@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 
@@ -44,7 +45,7 @@ use Illuminate\Database\Eloquent\Model;
 class Produk extends Model
 {
     /** @use HasFactory<\Database\Factories\ProdukFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'kode_produk',

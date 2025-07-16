@@ -24,7 +24,21 @@ class LokasiResource extends JsonResource
                     'nama' => $this->penanggungJawab->nama
                 ];
             }),
-            'produk_tersedia' => ProdukLokasiResource::collection($this->whenLoaded('produks')),
+            'produk_tersedia' => $this->whenLoaded('produks', function () {
+                return $this->produks->map(function ($produk) {
+                    return [
+                        'produk_id' => $produk->id,
+                        'kode_produk' => $produk->kode_produk,
+                        'nama_produk' => $produk->nama_produk,
+                        'harga' => $produk->harga,
+                        'stok' => $produk->pivot->stok,
+                        'kategori' => $produk->kategori ? [
+                            'id' => $produk->kategori->id,
+                            'nama' => $produk->kategori->nama_kategori
+                        ] : null
+                    ];
+                });
+            }),
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }

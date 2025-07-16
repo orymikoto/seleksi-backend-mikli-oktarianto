@@ -18,25 +18,44 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('produk')->group(function () {
         Route::get('/search', [ProdukController::class, 'search']);
         Route::get('/low-stock', [ProdukController::class, 'lowStock']);
-        
+
         // Basic CRUD
         Route::get('/', [ProdukController::class, 'index']);
         Route::post('/', [ProdukController::class, 'store']);
         Route::get('/{produk}', [ProdukController::class, 'show']);
         Route::put('/{produk}', [ProdukController::class, 'update']);
         Route::delete('/{produk}', [ProdukController::class, 'destroy']);
-        
-        // Additional features
+
     });
     Route::get('produk/{product}/mutations', [ProdukController::class, 'productMutations']);
     
-    // Location routes
-    Route::apiResource('lokasi', LokasiController::class);
+    Route::prefix('lokasi')->group(function () {
+        // Additional features
+        Route::get('/search', [LokasiController::class, 'search']);
+        
+        // Basic CRUD
+        Route::get('/', [LokasiController::class, 'index']);
+        Route::post('/', [LokasiController::class, 'store']);
+        Route::get('/{lokasi}', [LokasiController::class, 'show']);
+        Route::put('/{lokasi}', [LokasiController::class, 'update']);
+        Route::delete('/{lokasi}', [LokasiController::class, 'destroy']);
+        
+    });
     
     // Mutation routes
-    Route::apiResource('mutasi', MutasiController::class);
-    Route::post('mutasi/transfer', [MutasiController::class, 'transferProdukLokasi']);
-    Route::get('users/{user}/mutasi', [UserController::class, 'userMutations']);
+    Route::prefix('mutasi')->group(function () {
+        // Special operations
+        Route::post('/transfer', [MutasiController::class, 'transfer']);
+        Route::get('user/{userId}', [MutasiController::class, 'getByUser']);
+        Route::get('produk/{produkId}', [MutasiController::class, 'getByProduk']);
+        
+        // Basic CRUD
+        Route::get('/', [MutasiController::class, 'index']);
+        Route::post('/', [MutasiController::class, 'store']);
+        Route::get('/{mutasi}', [MutasiController::class, 'show']);
+        Route::delete('/{mutasi}', [MutasiController::class, 'destroy']);
+        
+    });
     
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);

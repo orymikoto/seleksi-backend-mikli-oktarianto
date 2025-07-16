@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('lokasi_tujuan_id')->nullable()->constrained('lokasis');
 
             $table->dateTime('tanggal');
-            $table->enum('jenis_mutasi', ['MASUK', 'KELUAR']);
+            $table->enum('jenis_mutasi', ['MASUK', 'KELUAR', 'TRANSFER']);
             $table->integer('jumlah');
             $table->text('keterangan')->nullable();
             

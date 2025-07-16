@@ -12,6 +12,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property float $harga
  * @property string $deskripsi
  * @property-read array $lokasi_ids
+ * @property-read array $stok
  * @property-read \Illuminate\Http\UploadedFile|null $gambar
  */
 class StoreProdukRequest extends FormRequest

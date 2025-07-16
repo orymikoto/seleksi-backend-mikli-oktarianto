@@ -21,6 +21,8 @@ class ProdukLokasi extends Model
     /** @use HasFactory<\Database\Factories\ProdukLokasiFactory> */
     use HasFactory;
 
+    protected $table = 'produk_lokasi';
+
     protected $fillable = [
         'produk_id',
         'lokasi_id',

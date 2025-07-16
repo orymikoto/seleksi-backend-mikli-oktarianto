@@ -15,32 +15,35 @@ class MutasiResource extends JsonResource
             'jenis_mutasi' => $this->jenis_mutasi,
             'jumlah' => $this->jumlah,
             'keterangan' => $this->keterangan,
-            'produk' => $this->whenLoaded('produkLokasi.produk', function () {
-                return [
-                    'id' => $this->produkLokasi->produk->id,
-                    'kode_produk' => $this->produkLokasi->produk->kode_produk,
-                    'nama_produk' => $this->produkLokasi->produk->nama_produk
-                ];
-            }),
-            'lokasi_asal' => $this->when($this->lokasi_asal_id, function () {
-                return [
-                    'id' => $this->lokasi_asal_id,
-                    'nama_lokasi' => $this->lokasiAsal->nama_lokasi
-                ];
-            }),
-            'lokasi_tujuan' => $this->when($this->lokasi_tujuan_id, function () {
-                return [
-                    'id' => $this->lokasi_tujuan_id,
-                    'nama_lokasi' => $this->lokasiTujuan->nama_lokasi
-                ];
-            }),
             'user' => $this->whenLoaded('user', function () {
                 return [
                     'id' => $this->user->id,
                     'name' => $this->user->name
                 ];
             }),
-            'created_at' => $this->created_at->toDateTimeString(),
+            'produk' => $this->whenLoaded('produk', function () {
+                return [
+                    'id' => $this->produk->id,
+                    'kode_produk' => $this->produk->kode_produk,
+                    'nama_produk' => $this->produk->nama_produk,
+                    'harga' => $this->produk->harga
+                ];
+            }),
+            'lokasi_asal' => $this->whenLoaded('lokasiAsal', function () {
+                return [
+                    'id' => $this->lokasi_asal_id,
+                    'kode_lokasi' => $this->lokasiAsal->kode_lokasi,
+                    'nama_lokasi' => $this->lokasiAsal->nama_lokasi
+                ];
+            }),
+            'lokasi_tujuan' => $this->whenLoaded('lokasiTujuan', function () {
+                return $this->lokasi_tujuan_id ? [
+                    'id' => $this->lokasi_tujuan_id,
+                    'kode_lokasi' => $this->lokasiTujuan->kode_lokasi,
+                    'nama_lokasi' => $this->lokasiTujuan->nama_lokasi
+                ] : null;
+            }),
+            'created_at' => $this->created_at->toDateTimeString()
         ];
     }
 }

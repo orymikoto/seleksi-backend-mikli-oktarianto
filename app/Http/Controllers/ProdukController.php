@@ -15,11 +15,13 @@ class ProdukController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $perPage = $request->input('per_page') ?? 10;
+
         $produks = Produk::with(['kategori', 'lokasis'])
         ->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->paginate($perPage);
 
         // The API Resource handles the JSON structure automatically
         return ProdukResource::collection($produks)
@@ -43,10 +45,19 @@ class ProdukController extends Controller
 
             $produk = Produk::create($data);
 
-            // Sync locations if provided
-            if ($request->has('lokasi_ids')) {
-                $produk->lokasis()->sync($request->lokasi_ids);
+            // Sync locations with stocks
+            if (!empty($request['lokasi_ids'])) {
+                $syncData = [];
+                // Loop through the validated location IDs.
+                foreach ($request['lokasi_ids'] as $index => $lokasiId) {
+                    // Match each location ID with its corresponding stock value from the validated data.
+                    // This ensures the arrays are correctly paired.
+                    $syncData[$lokasiId] = ['stok' => $request['stok'][$index]];
+                }
+                // Sync the data to the pivot table.
+                $produk->lokasis()->sync($syncData);
             }
+
 
             return response()->json([
                 'success' => true,

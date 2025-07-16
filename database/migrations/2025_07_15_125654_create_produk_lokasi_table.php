@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['produk_id', 'lokasi_id']);
+            $table->softDeletes();
         });
     }
 

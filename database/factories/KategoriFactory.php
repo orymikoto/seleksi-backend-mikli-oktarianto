@@ -17,8 +17,14 @@ class KategoriFactory extends Factory
      */
     public function definition(): array
     {
+        $categories = [
+            'Elektronik', 'Fashion', 'Makanan', 'Minuman', 'Alat Rumah Tangga',
+            'Kesehatan', 'Kecantikan', 'Olahraga', 'Mainan', 'Buku',
+            'Otomotif', 'Perkakas', 'Peralatan Kantor', 'Hobi', 'Aksesoris'
+        ];
+
         return [
-            'nama' => $this->faker->unique()->word,
+            'nama_kategori' => $this->faker->unique()->randomElement($categories),
         ];
     }
 }

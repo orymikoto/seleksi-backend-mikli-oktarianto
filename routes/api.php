@@ -15,8 +15,19 @@ Route::middleware('auth:sanctum')->group(function () {
     // User routes
     Route::apiResource('users', UserController::class)->except(['store']);
     
-    // Product routes
-    Route::apiResource('produk', ProdukController::class);
+    Route::prefix('produk')->group(function () {
+        Route::get('/search', [ProdukController::class, 'search']);
+        Route::get('/low-stock', [ProdukController::class, 'lowStock']);
+        
+        // Basic CRUD
+        Route::get('/', [ProdukController::class, 'index']);
+        Route::post('/', [ProdukController::class, 'store']);
+        Route::get('/{produk}', [ProdukController::class, 'show']);
+        Route::put('/{produk}', [ProdukController::class, 'update']);
+        Route::delete('/{produk}', [ProdukController::class, 'destroy']);
+        
+        // Additional features
+    });
     Route::get('produk/{product}/mutations', [ProdukController::class, 'productMutations']);
     
     // Location routes

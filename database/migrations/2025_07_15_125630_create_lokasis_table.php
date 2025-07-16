@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('x_coordinate')->nullable();
             $table->string('y_coordinate')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

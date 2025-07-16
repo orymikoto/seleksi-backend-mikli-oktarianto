@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 
@@ -39,12 +41,36 @@ use Illuminate\Database\Eloquent\Model;
 class Lokasi extends Model
 {
     /** @use HasFactory<\Database\Factories\LokasiFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'penanggung_jawab_id',
+        'kode_lokasi',
+        'nama_lokasi',
+        'alamat_lengkap',
+        'x_coordinate',
+        'y_coordinate',
+    ];
+    
     public function produks()
     {
-        return $this->belongsToMany(Lokasi::class, 'produk_lokasi')
-                    ->withPivot('stok')
-                    ->withTimestamps();
+        return $this->belongsToMany(Produk::class, 'produk_lokasi') 
+            ->withPivot('stok')
+            ->withTimestamps();
+    }
+
+    public function penanggungJawab(): BelongsTo
+    {
+        return $this->belongsTo(PenanggungJawab::class);
+    }
+
+    public function mutasiAsal()
+    {
+        return $this->hasMany(Mutasi::class, 'lokasi_asal_id');
+    }
+
+    public function mutasiTujuan()
+    {
+        return $this->hasMany(Mutasi::class, 'lokasi_tujuan_id');
     }
 }

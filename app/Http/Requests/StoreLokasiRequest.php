@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
 /**
+ * @mixin \Illuminate\Http\Request
  * @property string $kode_lokasi
- * @property string|null $penanggung_jawab_id
  * @property string $nama_lokasi
- * @property string|null $alamat_lengkap
- * @property string|null $x_coordinate
- * @property string|null $y_coordinate
+ * @property int $penanggung_jawab_id
+ * @property string $alamat_lengkap
+ * @property string $x_coordinate
+ * @property string $y_coordinate
  */
 class StoreLokasiRequest extends FormRequest
 {
@@ -31,7 +31,12 @@ class StoreLokasiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'kode_lokasi' => 'required|string|max:50|unique:lokasis,kode_lokasi',
+            'nama_lokasi' => 'required|string|max:255',
+            'penanggung_jawab_id' => 'required|exists:users,id',
+            'alamat_lengkap' => 'required|string',
+            'x_coordinate' => 'required|regex:/^-?\d{1,3}(\.\d+)?$/',
+            'y_coordinate' => 'required|regex:/^-?\d{1,3}(\.\d+)?$/',
         ];
     }
 }

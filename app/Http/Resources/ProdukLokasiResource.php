@@ -7,21 +7,26 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProdukLokasiResource extends JsonResource
 {
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [
-            'lokasi_id' => $this->id,
-            'nama_lokasi' => $this->nama_lokasi,
-            'kode_lokasi' => $this->kode_lokasi,
+            'produk_id' => $this->id,
+            'kode_produk' => $this->kode_produk,
+            'nama_produk' => $this->nama_produk,
+            'harga' => $this->harga,
             'stok' => $this->pivot->stok,
             'last_updated' => $this->pivot->updated_at->toDateTimeString(),
-            'produk' => $this->whenLoaded('produk', function () {
+            'kategori' => $this->whenLoaded('kategori', function () {
                 return [
-                    'id' => $this->produk->id,
-                    'kode_produk' => $this->produk->kode_produk,
-                    'nama_produk' => $this->produk->nama_produk
+                    'id' => $this->kategori->id,
+                    'nama' => $this->kategori->nama_kategori
                 ];
-            })
+            }),
         ];
     }
 }

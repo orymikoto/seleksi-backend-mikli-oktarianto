@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 
@@ -41,5 +42,59 @@ use Illuminate\Database\Eloquent\Model;
 class Mutasi extends Model
 {
     /** @use HasFactory<\Database\Factories\MutasiFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'user_id',
+        'produk_lokasi_id',
+        'lokasi_asal_id',
+        'lokasi_tujuan_id',
+        'tanggal',
+        'jenis_mutasi',
+        'jumlah',
+        'keterangan'
+    ];
+
+    protected $casts = [
+        'tanggal' => 'datetime',
+        'jumlah' => 'integer'
+    ];
+
+    const JENIS_MUTASI = [
+        'MASUK' => 'MASUK',
+        'KELUAR' => 'KELUAR',
+        'TRANSFER' => 'TRANSFER'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function produkLokasi()
+    {
+        return $this->belongsTo(ProdukLokasi::class);
+    }
+
+    public function lokasiAsal()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_asal_id');
+    }
+
+    public function lokasiTujuan()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_tujuan_id');
+    }
+
+    public function produk()
+    {
+        return $this->hasOneThrough(
+            Produk::class,
+            ProdukLokasi::class,
+            'id',
+            'id',
+            'produk_lokasi_id',
+            'produk_id'
+        );
+    }
 }

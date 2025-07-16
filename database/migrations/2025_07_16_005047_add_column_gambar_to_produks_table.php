@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Satuan;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kategoris', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_kategori');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('produks', function (Blueprint $table) {
+            //
+            $table->text('gambar')->nullable();
         });
     }
 
@@ -25,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kategoris');
+        Schema::table('produks', function (Blueprint $table) {
+            //
+            $table->dropColumn('gambar');
+        });
     }
 };

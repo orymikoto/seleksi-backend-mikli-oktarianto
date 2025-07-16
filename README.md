@@ -24,8 +24,8 @@ https://www.postman.com/security-architect-13980626/mikli-oktarianto/documentati
 ## **Instalasi**
 
 1. **Clone repository:**  
-   git clone https://github.com/your-repo/inventory-management-api.git  
-   cd inventory-management-api
+   git clone https://github.com/orymikoto/seleksi-backend-mikli-oktarianto.git
+   cd seleksi-backend-mikli-oktarianto
 
 2. **Install dependensi:**  
    composer install
@@ -67,19 +67,23 @@ POST /api/login
 **Request:**
 
 {  
-    "email": "admin@example.com",  
-    "password": "password"  
+    "email": "mikli@clavata.com",  
+    "password": "mikli123"  
 }
 
 **Response:**
 
-{  
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",  
-    "user": {  
-        "id": 1,  
-        "name": "Admin User",  
-        "email": "admin@example.com"  
-    }  
+{
+    "success": true,
+    "token": "12|owMFwTKakNTof0a5TwM8JDQDcKqnw7e6U1kYx15u8fbd23d9",
+    "user": {
+        "id": 1,
+        "name": "Mikli Tester",
+        "email": "mikli@clavata.com",
+        "email_verified_at": "2025-07-15T23:04:41.000000Z",
+        "created_at": "2025-07-15T23:04:41.000000Z",
+        "updated_at": "2025-07-15T23:04:41.000000Z"
+    }
 }
 
 ### **Endpoint Utama**
@@ -88,6 +92,8 @@ POST /api/login
 
 GET    /api/produk       \- Menampilkan semua produk  
 POST   /api/produk       \- Membuat produk baru  
+GET    /api/produk/search?query=value  \- Search Produk
+GET    /api/produk/low-stock  \- Mendapatkan produk yang memiliki stok sedikit
 GET    /api/produk/{id}  \- Mendapatkan detail produk  
 PUT    /api/produk/{id}  \- Memperbarui produk  
 DELETE /api/produk/{id}  \- Menghapus produk
@@ -96,6 +102,7 @@ DELETE /api/produk/{id}  \- Menghapus produk
 
 GET    /api/lokasi       \- Menampilkan semua lokasi  
 POST   /api/lokasi       \- Membuat lokasi baru  
+GET    /api/lokasi/search?query=value  \- Search Lokasi 
 GET    /api/lokasi/{id}  \- Mendapatkan detail lokasi  
 PUT    /api/lokasi/{id}  \- Memperbarui lokasi  
 DELETE /api/lokasi/{id}  \- Menghapus lokasi

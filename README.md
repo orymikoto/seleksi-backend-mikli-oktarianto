@@ -1,61 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# **Ringkasan**
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Ini adalah API Sistem Manajemen Inventaris berbasis Laravel yang menyediakan fungsionalitas komprehensif untuk melacak produk, lokasi, pergerakan stok (mutasi), dan aktivitas pengguna. Sistem ini dirancang untuk menangani operasi inventaris yang kompleks dengan autentikasi dan otorisasi yang tepat.
 
-## About Laravel
+## Dokumentasi API
+https://www.postman.com/security-architect-13980626/mikli-oktarianto/documentation/wdnkwz3/seleksi-backend-mikli-oktarianto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## **Fitur Utama**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **Manajemen Produk**: Lacak produk dengan detail seperti kode, kategori, harga, dan satuan.  
+* **Manajemen Lokasi**: Kelola beberapa lokasi penyimpanan lengkap dengan koordinat.  
+* **Pelacakan Stok**: Catat semua pergerakan stok (masuk, keluar, transfer).  
+* **Manajemen Pengguna**: Autentikasi aman dengan kontrol akses berbasis peran.  
+* **Pelaporan**: Hasilkan laporan tingkat stok, pergerakan, dan utilisasi lokasi.  
+* **RESTful API**: Endpoint berbasis JSON dengan kode status HTTP yang sesuai.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## **Kebutuhan Sistem**
 
-## Learning Laravel
+* PHP 8.1+  
+* Composer 2.0+  
+* PostgreSQL 12+ (atau MySQL 8+)  
+* Laravel 10+
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## **Instalasi**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Clone repository:**  
+   git clone https://github.com/your-repo/inventory-management-api.git  
+   cd inventory-management-api
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install dependensi:**  
+   composer install
 
-## Laravel Sponsors
+3. **Buat dan konfigurasikan file** .env**:**  
+   cp .env.example .env
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. **Generate kunci aplikasi:**  
+   php artisan key:generate
 
-### Premium Partners
+5. **Konfigurasikan koneksi database di** .env**:**  
+   DB\_CONNECTION=pgsql  
+   DB\_HOST=127.0.0.1  
+   DB\_PORT=5432  
+   DB\_DATABASE=inventory\_db  
+   DB\_USERNAME=postgres  
+   DB\_PASSWORD=your\_password
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+6. **Jalankan migrasi dan seeder:**  
+   php artisan migrate \--seed
 
-## Contributing
+## **Menjalankan Aplikasi**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Mulai server pengembangan:**  
+   php artisan serve
 
-## Code of Conduct
+   API akan tersedia di http://localhost:8000/api
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## **Dokumentasi API**
 
-## Security Vulnerabilities
+### **Autentikasi**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Semua endpoint (kecuali login) memerlukan autentikasi dengan *Bearer Token*.
 
-## License
+**Login**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+POST /api/login
+
+**Request:**
+
+{  
+    "email": "admin@example.com",  
+    "password": "password"  
+}
+
+**Response:**
+
+{  
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",  
+    "user": {  
+        "id": 1,  
+        "name": "Admin User",  
+        "email": "admin@example.com"  
+    }  
+}
+
+### **Endpoint Utama**
+
+**Produk**
+
+GET    /api/produk       \- Menampilkan semua produk  
+POST   /api/produk       \- Membuat produk baru  
+GET    /api/produk/{id}  \- Mendapatkan detail produk  
+PUT    /api/produk/{id}  \- Memperbarui produk  
+DELETE /api/produk/{id}  \- Menghapus produk
+
+**Lokasi**
+
+GET    /api/lokasi       \- Menampilkan semua lokasi  
+POST   /api/lokasi       \- Membuat lokasi baru  
+GET    /api/lokasi/{id}  \- Mendapatkan detail lokasi  
+PUT    /api/lokasi/{id}  \- Memperbarui lokasi  
+DELETE /api/lokasi/{id}  \- Menghapus lokasi
+
+**Pergerakan Stok (Mutasi)**
+
+GET    /api/mutasi                  \- Menampilkan semua pergerakan stok  
+POST   /api/mutasi                  \- Mencatat pergerakan baru  
+POST   /api/mutasi/transfer         \- Transfer stok antar lokasi  
+GET    /api/mutasi/{id}             \- Mendapatkan detail pergerakan  
+DELETE /api/mutasi/{id}             \- Menghapus catatan pergerakan  
+GET    /api/mutasi/user/{id}      \- Mendapatkan pergerakan berdasarkan pengguna  
+GET    /api/mutasi/produk/{id}    \- Mendapatkan pergerakan berdasarkan produk
+
+### **Contoh Request**
+
+**Membuat Produk**
+
+curl \-X POST http://localhost:8000/api/produk \\  
+  \-H "Authorization: Bearer token\_anda" \\  
+  \-H "Content-Type: application/json" \\  
+  \-d '{  
+    "kode\_produk": "PRD-001",  
+    "nama\_produk": "Laptop Gaming",  
+    "kategori\_id": 1,  
+    "harga": 15000000,  
+    "satuan": "unit"  
+  }'
+
+**Transfer Stok**
+
+curl \-X POST http://localhost:8000/api/mutasi/transfer \\  
+  \-H "Authorization: Bearer token\_anda" \\  
+  \-H "Content-Type: application/json" \\  
+  \-d '{  
+    "produk\_id": 1,  
+    "lokasi\_asal\_id": 1,  
+    "lokasi\_tujuan\_id": 2,  
+    "jumlah": 5,  
+    "keterangan": "Transfer ke cabang"  
+  }'
+
+### **Skema Database**
+
+Tabel kunci:
+
+* **produks**: Data master produk  
+* **lokasis**: Informasi lokasi  
+* **produk\_lokasi**: Tingkat stok per lokasi (tabel pivot)  
+* **mutasis**: Semua catatan pergerakan stok  
+* **users**: Pengguna sistem
+
+### **Deployment**
+
+Untuk deployment ke produksi:
+
+1. Konfigurasikan koneksi database yang benar.  
+2. Atur APP\_ENV=production di .env.  
+3. contoh .env ada pada .env example saya sudah memberikan contoh untuk konfigurasi umum pada postgresql, mysql dan sqlite
+4. Optimalkan aplikasi:  
+   php artisan optimize
+
+5. Siapkan *queue worker* untuk pekerjaan latar belakang (jika ada).
+
+### **Lisensi**
+
+Proyek ini dilisensikan di bawah Lisensi MIT.
